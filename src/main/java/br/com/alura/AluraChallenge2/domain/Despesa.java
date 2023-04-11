@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Table;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.Table;
 @Table(appliesTo = "despesa")
 @Getter
 @Setter
+@Builder
 public class Despesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
