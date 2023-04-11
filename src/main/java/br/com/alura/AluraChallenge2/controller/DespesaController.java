@@ -24,7 +24,7 @@ public class DespesaController {
         return ResponseEntity.ok(service.getDespise());
     }
 
-    @PostMapping("despesa")
+    @PostMapping("/despesa")
     public ResponseEntity<Despesa> create(@RequestBody DespesaRequest request){
         final var response = service.create(request);
         URI uri = URI.create("despesa/"+ response.getId());

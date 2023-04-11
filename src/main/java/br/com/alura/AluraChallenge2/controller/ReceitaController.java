@@ -1,8 +1,6 @@
 package br.com.alura.AluraChallenge2.controller;
 
-import br.com.alura.AluraChallenge2.domain.Despesa;
 import br.com.alura.AluraChallenge2.domain.Receita;
-import br.com.alura.AluraChallenge2.dto.DespesaRequest;
 import br.com.alura.AluraChallenge2.dto.ReceitaRequest;
 import br.com.alura.AluraChallenge2.service.ReceitaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,7 @@ public class ReceitaController {
         return ResponseEntity.ok(service.getIncomes());
     }
 
-    @PostMapping("receita")
+    @PostMapping("/receita")
     public ResponseEntity<Receita> create(@RequestBody ReceitaRequest request){
         final var response = service.create(request);
         URI uri = URI.create("receita/"+ response.getId());
