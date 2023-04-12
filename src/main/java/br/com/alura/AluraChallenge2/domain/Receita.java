@@ -1,13 +1,14 @@
 package br.com.alura.AluraChallenge2.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Table;
+
+import java.time.LocalDate;
 
 
 @Entity
@@ -15,6 +16,8 @@ import org.hibernate.annotations.Table;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Receita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,5 +25,7 @@ public class Receita {
 
     private String descricao;
     private String valor;
-    private String data;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate data;
 }
