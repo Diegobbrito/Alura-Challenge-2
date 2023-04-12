@@ -7,6 +7,7 @@ import br.com.alura.AluraChallenge2.repository.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -18,6 +19,19 @@ public class DespesaService {
     }
 
     public Despesa create(DespesaRequest request) {
+        YearMonth yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
+
+        final var despesas = repository.findAllByDataBetween(
+                 yearMonth.atDay(1),
+                yearMonth.atEndOfMonth());
+
+        final var checkElegebility = despesas
+                .stream()
+                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
+
+        if(checkElegebility){
+            throw new IllegalArgumentException("Despesa já cadastrada com essa Descrição");
+        }
         final var despesa = Despesa.builder()
                 .data(request.getData())
                 .valor(request.getValor())
@@ -41,7 +55,10 @@ public class DespesaService {
 
     public Despesa update(DespesaRequest request, Long id) {
 
-        final var despesaToUpdate = repository.findById(id).get();
+        final var optionalDespesa = repository.findById(id);
+        if (optionalDespesa.isEmpty())
+            return null;
+        final var despesaToUpdate = optionalDespesa.get();
 
         final var despesa = despesaToUpdate.builder()
                 .id(id)

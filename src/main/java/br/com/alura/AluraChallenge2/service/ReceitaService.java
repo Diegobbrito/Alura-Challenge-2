@@ -7,6 +7,7 @@ import br.com.alura.AluraChallenge2.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -20,10 +21,23 @@ public class ReceitaService {
     }
 
     public Receita create(ReceitaRequest request) {
-               final var receita = Receita.builder()
-                .data(request.getData())
-                .valor(request.getValor())
-                .descricao(request.getDescricao()).build();
+        YearMonth yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
+
+        final var receitas = repository.findAllByDataBetween(
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth());
+
+        final var checkElegebility = receitas
+                .stream()
+                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
+
+        if(checkElegebility){
+            throw new IllegalArgumentException("Despesa já cadastrada com essa Descrição");
+        }
+        final var receita = Receita.builder()
+        .data(request.getData())
+        .valor(request.getValor())
+        .descricao(request.getDescricao()).build();
 
         return repository.save(receita);
     }
@@ -41,10 +55,10 @@ public class ReceitaService {
     }
 
     public Receita update(ReceitaRequest request, Long id) {
-        final var optionalDespesa = repository.findById(id);
-        if (optionalDespesa.isEmpty())
+        final var optionalReceita = repository.findById(id);
+        if (optionalReceita.isEmpty())
             return null;
-        final var receitaToUpdate = optionalDespesa.get();
+        final var receitaToUpdate = optionalReceita.get();
 
         final var receita = receitaToUpdate.builder()
                 .id(id)
