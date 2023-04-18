@@ -3,6 +3,7 @@ package br.com.alura.AluraChallenge2.service;
 import br.com.alura.AluraChallenge2.domain.Despesa;
 import br.com.alura.AluraChallenge2.dto.DespesaRequest;
 import br.com.alura.AluraChallenge2.dto.DespesaResponse;
+import br.com.alura.AluraChallenge2.enumarator.Categoria;
 import br.com.alura.AluraChallenge2.repository.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,26 +20,35 @@ public class DespesaService {
     }
 
     public Despesa create(DespesaRequest request) {
-        YearMonth yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
-
-        final var despesas = repository.findAllByDataBetween(
-                 yearMonth.atDay(1),
-                yearMonth.atEndOfMonth());
-
-        final var checkElegebility = despesas
-                .stream()
-                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
-
-        if(checkElegebility){
-            throw new IllegalArgumentException("Despesa já cadastrada com essa Descrição");
-        }
+        checkDataElegebility(request);
+        checkCategory(request);
         final var despesa = Despesa.builder()
                 .data(request.getData())
                 .valor(request.getValor())
-                .descricao(request.getDescricao()).build();
+                .descricao(request.getDescricao())
+                .categoria(request.getCategoria())
+                .build();
 
         return repository.save(despesa);
 
+    }
+
+    private void checkCategory(DespesaRequest request) {
+        if(request.getCategoria() == null){
+            request.setCategoria(Categoria.OUTRAS);
+        }
+    }
+
+    private void checkDataElegebility(DespesaRequest request) {
+        final var yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
+        final var checkElegebility = repository.findAllByDataBetween(
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth())
+                .stream()
+                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
+        if(checkElegebility){
+            throw new IllegalArgumentException("Despesa já cadastrada com essa Descrição");
+        }
     }
 
     public DespesaResponse getDespise(Long id) {

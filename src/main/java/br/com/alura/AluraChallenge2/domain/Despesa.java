@@ -1,5 +1,6 @@
 package br.com.alura.AluraChallenge2.domain;
 
+import br.com.alura.AluraChallenge2.enumarator.Categoria;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,4 +27,6 @@ public class Despesa {
     private String valor;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
+
+    private Categoria categoria;
 }

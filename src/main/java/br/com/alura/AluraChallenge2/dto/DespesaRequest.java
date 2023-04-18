@@ -1,5 +1,6 @@
 package br.com.alura.AluraChallenge2.dto;
 
+import br.com.alura.AluraChallenge2.enumarator.Categoria;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,4 +19,6 @@ public class DespesaRequest {
     @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
+
+    private Categoria categoria;
 }
