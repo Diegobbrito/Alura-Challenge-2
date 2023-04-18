@@ -13,4 +13,6 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long> {
     List<Despesa> findAllByDataBetween(
             LocalDate start,
             LocalDate end);
+
+    List<Despesa> findByDescricaoContains(String descricao);
 }

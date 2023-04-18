@@ -1,7 +1,6 @@
 package br.com.alura.AluraChallenge2.controller;
 
 import br.com.alura.AluraChallenge2.domain.Despesa;
-import br.com.alura.AluraChallenge2.domain.Receita;
 import br.com.alura.AluraChallenge2.dto.DespesaRequest;
 import br.com.alura.AluraChallenge2.dto.DespesaResponse;
 import br.com.alura.AluraChallenge2.service.DespesaService;
@@ -20,8 +19,8 @@ public class DespesaController {
     private DespesaService service;
 
     @GetMapping("/despesas")
-    public ResponseEntity<List<Despesa>> despises() {
-        return ResponseEntity.ok(service.getDespise());
+    public ResponseEntity<List<Despesa>> despises(@RequestParam(required = false) String descricao) {
+        return ResponseEntity.ok(service.getDespise(descricao));
     }
 
     @GetMapping("/despesas/{id}")

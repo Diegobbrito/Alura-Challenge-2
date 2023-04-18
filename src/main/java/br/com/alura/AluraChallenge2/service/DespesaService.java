@@ -15,9 +15,6 @@ import java.util.List;
 public class DespesaService {
     @Autowired
     private DespesaRepository repository;
-    public List<Despesa> getDespise() {
-        return repository.findAll();
-    }
 
     public Despesa create(DespesaRequest request) {
         checkDataElegebility(request);
@@ -81,5 +78,13 @@ public class DespesaService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+
+
+    public List<Despesa> getDespise(String descricao) {
+        if (descricao == null)
+            return repository.findAll();
+        return repository.findByDescricaoContains(descricao);
     }
 }
