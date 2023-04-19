@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -14,8 +15,8 @@ import java.time.LocalDate;
 public class DespesaRequest {
     @NotBlank
     private String descricao;
-    @NotBlank
-    private String valor;
+    @NotNull
+    private BigDecimal valor;
     @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;

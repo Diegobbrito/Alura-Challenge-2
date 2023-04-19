@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 public class ReceitaResponse {
     private String descricao;
-    private String valor;
+    private BigDecimal valor;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 }

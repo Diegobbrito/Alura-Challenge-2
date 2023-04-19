@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.annotations.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -24,7 +25,7 @@ public class Despesa {
     private Long id;
 
     private String descricao;
-    private String valor;
+    private BigDecimal valor;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
