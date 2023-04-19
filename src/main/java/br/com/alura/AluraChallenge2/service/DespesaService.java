@@ -87,4 +87,12 @@ public class DespesaService {
             return repository.findAll();
         return repository.findByDescricaoContains(descricao);
     }
+
+    public List<Despesa> getDespise(int mes, int ano) {
+
+        final var yearMonth = YearMonth.of(ano, mes);
+        return repository.findAllByDataBetween(
+                        yearMonth.atDay(1),
+                        yearMonth.atEndOfMonth());
+    }
 }

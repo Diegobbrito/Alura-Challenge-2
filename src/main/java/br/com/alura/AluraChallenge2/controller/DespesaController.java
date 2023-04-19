@@ -27,8 +27,16 @@ public class DespesaController {
     public ResponseEntity<DespesaResponse> despise(@PathVariable Long id) {
         final var response = service.getDespise(id);
         if (response != null)
-            return ResponseEntity.ok(service.getDespise(id));
+            return ResponseEntity.ok(response);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/despesas/{mes}/{ano}")
+    public ResponseEntity<List<Despesa>> despiseByDate(@PathVariable int mes, @PathVariable int ano) {
+        final var response = service.getDespise(mes, ano);
+        if (response.isEmpty())
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/despesas")
