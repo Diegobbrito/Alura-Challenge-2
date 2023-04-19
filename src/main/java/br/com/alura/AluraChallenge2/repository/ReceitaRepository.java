@@ -13,4 +13,6 @@ public interface ReceitaRepository extends JpaRepository<Receita,Long> {
     List<Receita> findAllByDataBetween(
             LocalDate start,
             LocalDate end);
+
+    List<Receita> findAllByDescricaoContaining(String descricao);
 }

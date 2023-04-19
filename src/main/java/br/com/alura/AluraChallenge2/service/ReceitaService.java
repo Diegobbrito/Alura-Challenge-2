@@ -15,31 +15,36 @@ public class ReceitaService {
 
     @Autowired
     private ReceitaRepository repository;
-    public List<Receita> getIncomes() {
+    public List<Receita> getIncomes(String descricao) {
 
-        return repository.findAll();
+        if(descricao == null)
+            return repository.findAll();
+
+        return repository.findAllByDescricaoContaining(descricao);
     }
 
     public Receita create(ReceitaRequest request) {
-        YearMonth yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
 
-        final var receitas = repository.findAllByDataBetween(
-                yearMonth.atDay(1),
-                yearMonth.atEndOfMonth());
-
-        final var checkElegebility = receitas
-                .stream()
-                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
-
-        if(checkElegebility){
-            throw new IllegalArgumentException("Despesa já cadastrada com essa Descrição");
-        }
+        checkDataEligibility(request);
         final var receita = Receita.builder()
         .data(request.getData())
         .valor(request.getValor())
         .descricao(request.getDescricao()).build();
 
         return repository.save(receita);
+    }
+
+    private void checkDataEligibility(ReceitaRequest request) {
+        YearMonth yearMonth = YearMonth.of(request.getData().getYear(), request.getData().getMonth());
+
+        final var isNotIllegible = repository.findAllByDataBetween(
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth())
+                .stream()
+                .anyMatch(d -> d.getDescricao().equals(request.getDescricao()));
+        if(isNotIllegible){
+            throw new IllegalArgumentException("Despesa já cadastrada com essa descrição esse mes");
+        }
     }
 
     public ReceitaResponse getIncomes(Long id) {
@@ -58,9 +63,9 @@ public class ReceitaService {
         final var optionalReceita = repository.findById(id);
         if (optionalReceita.isEmpty())
             return null;
-        final var receitaToUpdate = optionalReceita.get();
+        final var incomeToUpdate = optionalReceita.get();
 
-        final var receita = receitaToUpdate.builder()
+        final var receita = incomeToUpdate.builder()
                 .id(id)
                 .data(request.getData())
                 .valor(request.getValor())
@@ -72,5 +77,13 @@ public class ReceitaService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<Receita> getDespise(int mes, int ano) {
+        YearMonth yearMonth = YearMonth.of(ano, mes);
+
+        return repository.findAllByDataBetween(
+                yearMonth.atDay(1),
+                yearMonth.atEndOfMonth());
     }
 }
