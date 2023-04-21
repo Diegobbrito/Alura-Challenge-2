@@ -1,8 +1,11 @@
 package br.com.alura.AluraChallenge2.configuration;
 
+import br.com.alura.AluraChallenge2.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -14,10 +17,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfiguration {
 
+    @Autowired
+    private final UsuarioService usuarioService;
+
     private static final String[] AUTH_WHITELIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**"
     };
+
+    public SecurityConfiguration(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
+    @Bean
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(this.usuarioService).passwordEncoder(new BCryptPasswordEncoder());
+    }
 
     @Bean
     public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
